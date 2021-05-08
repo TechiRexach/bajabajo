@@ -1,0 +1,40 @@
+.App {
+  text-align: center;
+}
+
+.inputfilm{
+  width: 50%;
+  text-align: center;
+  margin: 0px auto;
+}
+
+.home{
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+}
+
+.rallas{
+  height: 200px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+
+.rallasUp{
+  background: repeating-linear-gradient( 50deg, #000, #000 60px, #fff 15px, #fff 150px );
+  border: 1px solid black;
+  transform: skewY(-1.5deg);
+  height: 100px;
+  margin-bottom: 13px;
+}
+
+.rallasDown{
+  background: repeating-linear-gradient( 130deg, #000, #000 60px, #fff 15px, #fff 150px );
+  border: 1px solid black;
+  height: 100px;
+}
+
+table.table{
+  width: 80%;
+  margin: 0px auto;
+}
