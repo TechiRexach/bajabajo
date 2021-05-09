@@ -5,16 +5,20 @@ const apiRouter = new Router();
 const isAuth = require('../services/middlewareIsAuth');
 const Film = require('../models/films');
 
-// GET INPUT
-apiRouter.get('/search/:filmName', async (req, res) => {
+// GET INPUT AND PAGE
+apiRouter.get('/search/:filmName/:page', async (req, res) => {
 
     const title = req.params.filmName
+    const page = req.params.page
 
-    
-        const films = await axios.get(`http://www.omdbapi.com/?apikey=959abc59&s=${title}&type=movie`)
-        const data = films.data
+    const films = await axios.get(`http://www.omdbapi.com/?apikey=959abc59&s=${title}&type=movie&page=${page}`)
+    const data = films.data
 
-        res.status(200).send({data})
+    if(data.Response == 'False'){
+        return res.status(404).send({message: data.Error})
+    }
+
+    return res.status(200).send({data})
 })
 
 //GET SELECTED FILM
@@ -24,8 +28,12 @@ apiRouter.get('/film/:id', async (req, res) => {
     
     const films = await axios.get(`http://www.omdbapi.com/?apikey=959abc59&i=${movieId}`)
     const selectedFilm = films.data
+
+    if(selectedFilm.Response == 'False'){
+        return res.status(404).send({message: selectedFilm.Error})
+    }
     
-    res.status(200).send({selectedFilm})
+    return res.status(200).send({selectedFilm})
 
 })
 
@@ -51,15 +59,22 @@ apiRouter.post('/catalog', isAuth, async (req, res) => {
 apiRouter.get('/catalog/likes', isAuth, async (req, res) => {
 
     const id = req.user.sub
-    
-    Film.find({user: id})
-    .populate('user', 'email')
-    .exec((err, films) => {
-        if(err){
-            return res.status(404).send({message: "No hay peliculas", err})
-        }
-        return res.status(200).send({message: 'FAVORITOS', films});
-    })
+ 
+    try{
+
+        Film.find({user: id})
+        .populate('user', 'email')
+        .sort({title: 1})
+        .exec((err, films) => {
+            if(err){
+                return res.status(404).send({message: "No hay peliculas", err})
+            }
+            return res.status(200).send({message: 'FAVORITOS', films});
+        })
+    }
+    catch(error){
+        return res.status(400).send({message: 'Se ha producido un error', error});
+    }
   
 })
 

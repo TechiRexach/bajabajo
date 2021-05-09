@@ -13,15 +13,6 @@ function UserProfile(props){
     const [errorMessage, setErrorMessage] = useState('');
     const [wellDone, setWellDone] = useState('');
 
-    // const [modalIsOpen, setIsOpen] = useState(false);
-    // function openModal(){
-    //     setIsOpen(true)
-    
-    // }
-    // function closeModal(){
-    //     setIsOpen(false)
-    // }
-
     useEffect(() => {
 
         const token = localStorage.getItem(AUTH_TOKEN)
@@ -33,7 +24,7 @@ function UserProfile(props){
             setUserFilms(response.data.films)
         })
         .catch((error) => {
-            setErrorMessage(error.response)
+            setErrorMessage(error.response.data)
             localStorage.removeItem(AUTH_TOKEN)
             history.push('/login')
         })
@@ -48,25 +39,6 @@ function UserProfile(props){
         }, 2000)
     }
 
-    // function borrarCuenta(){
-    //     const token = localStorage.getItem(AUTH_TOKEN)
-    //     const config = {headers: {Authorization: `Bearer ${token}`}}
-    //     axios.delete(`${DEV_URL}/users/${user._id}`, config)
-    //     .then(response => {
-    //         setWellDone(response.data.message)
-            
-    //         setTimeout(() => {
-    //             history.push('/');
-    //             localStorage.removeItem(AUTH_TOKEN)
-    //         }, 2000)
-
-    //     })
-    //     .catch(err => {
-    //         setErrorMessage(err.response)
-    //     })
-    //     closeModal()
-    // }
-
     return(
         <div >
          <Navbar />
@@ -75,7 +47,7 @@ function UserProfile(props){
                 {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
                 <div className='list-group list-group-flush inputfilm'>
                     {userFilms.map(pelicula => (
-                        <div className='list-group-item'>{pelicula.title}</div>
+                        <div key={pelicula._id} className='list-group-item'>{pelicula.title}</div>
                     ))}
                 </div>
             </div>

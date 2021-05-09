@@ -5,17 +5,23 @@ import Navbar from './Navbar';
 
 
 function OneFilm(props){
+
     const movieID = props.match.params.id
 
     const [movie, setMovie] = useState({});
-    const [error, setError] = useState('')
-
-    // const movieName = movie.Title
+    const [wellDone, setWellDone] = useState('');
+    const [error, setError] = useState('');
 
     useEffect (() => {
         axios.get(`${DEV_URL}/api/film/${movieID}`)
         .then(response => {
             setMovie(response.data.selectedFilm)
+        })
+        .catch(err => {
+            setError(err.response.data.message)
+            setTimeout(() => {
+                setError()
+            }, 2000)
         })
     },[movieID])
 
@@ -24,10 +30,16 @@ function OneFilm(props){
         const config = {headers: {Authorization: `Bearer ${token}`}}
         axios.post(`${DEV_URL}/api/catalog`, {...movie}, config)
         .then(response => {
-           console.log(response)
+            setWellDone(response.data.message)
+            setTimeout(() => {
+                setWellDone()
+            }, 2000)
         })
         .catch(error => {
-           console.log(error.response)
+            setError(error.response.data)
+            setTimeout(() => {
+                setError()
+            }, 2000)
         })
     }
 
@@ -36,19 +48,20 @@ function OneFilm(props){
             <Navbar />
             <h4 className='mb-5 text-decoration-underline'>{movie.Title}</h4>
             <img src={movie.Poster} alt="Poster"/>
-            {error && <h4>{error}</h4>}
+            {error && <h5 className='mt-4 text-danger'>{error}</h5>}
             <div>
-                <button onClick={addFilm} className='btn btn-outline-secondary mt-5 mb-5'>
+                <button onClick={addFilm} className='btn btn-outline-secondary mt-3 mb-5'>
                     <i class="fas fa-heart"></i>
                 </button>
             </div>
+            {wellDone && <h6 className='text-success'>{wellDone}</h6>}
             <table class="table">
                 <thead>
                     <tr>
-                    <th colspan="2">SINOPSIS</th>
+                    <th colSpan="2">SINOPSIS</th>
                     </tr>
                     <tr>
-                    <th colspan="2" className='fst-italic'>{movie.Plot}</th>
+                    <th colSpan="2" className='fst-italic'>{movie.Plot}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,7 +82,7 @@ function OneFilm(props){
                     <td>{movie.Production}</td>
                     </tr>
                 </tbody>
-                </table>
+            </table>
         </div>
     )
 }

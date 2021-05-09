@@ -11,7 +11,7 @@ function isAuth (req, res, next){
 
     jwt.verify(token.split(" ")[1], SECRET_TOKEN, (err, decode) => {
         if(err){
-            return res.status(401).send("Tienes que estar identificado para añadir peliculas a tu lista.");
+            return res.status(401).send("Haz login para añadir peliculas a tu lista.");
         } else {
             req.user = decode;
             next()

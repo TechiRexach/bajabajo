@@ -4,6 +4,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const createToken = require('../services/services');
 
+// POST: CREAR CUENTA NUEVO USUARIO
 authRouter.post('/signup', async (req, res) => {
 
     const email = req.body.email;
@@ -34,8 +35,6 @@ authRouter.post('/signup', async (req, res) => {
 });
 
 // POST: REALIZAR LOGIN DE USUARIO YA REGISTRADO
-//ASYNC / AWAIT
-
 authRouter.post('/login', async (req, res) =>{
 
     const email = req.body.email;
